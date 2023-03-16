@@ -133,30 +133,39 @@ class Graph:
             i=i+1
         return L[i],self.get_path_with_power(src,dest,L[i])
 
-    def dfs(self): #question 5 séance 2
+    def dfs(self): #question 5 séance 2 
+        """Finds the deoth of a node relative to an origin node."""
         depth=0
-        depths={self.nodes[0]:0}
+        depths={}
         parents={self.nodes[0]:[self.nodes[0],0]}
         visited=[]
-        for nodes in self.nodes:
-            visited.append(nodes)
-            depth+=1
-            for neighbor,power_min,dist in self.graph[nodes]:
-                if neighbor not in visited:
-                    parents[neighbor] = [nodes, power_min]
-                    depths[neighbor] = depth
-        return [depths, parents]
+        visited_1=[self.nodes[0]]
 
-    def explore(self,node, depth):
-        depths[node] = depth
-        visited=[]
-        for neighbor in self.graph[node]:
-            explore(node, depth+1)
+        def explore(node,depth):
+            depths[node]=depth
+            visited.append(node)
+            for neighbor,power_min,dist in self.graph[node]:
+                if neighbor not in visited:
+                    explore(neighbor,depth+1)
+                    parents[neighbor]=[node,power_min]
+     
+            return depths  
+              
+        depths=explore(self.nodes[0], 0)
+        
+  #      for nodes in self.nodes:
+   #         for neighbor,power_min,dist in self.graph[nodes]:
+    #            if neighbor not in visited_1 :
+     #               visited_1.append(neighbor)
+      #              parents[neighbor]=[nodes,power_min]
+        
+        self.depths = depths
+        self.parents = parents
 
 
     def get_power_and_path(self,src,dest): #question 5 séance 2 
-        depth_1=self.dfs()[0][src]
-        depth_2=self.dfs()[0][dest]
+        depth_1=self.depths[src]
+        depth_2=self.depths[dest]
         parent_1=src
         parent_2=dest
         path=[parent_1]
@@ -164,26 +173,29 @@ class Graph:
         list_power=[]
 
         if depth_1 > depth_2:
-            while self.dfs()[0][parent_1]>depth_2:
-                list_power.append(self.dfs()[1][parent_1][1])
-                parent_1=self.dfs()[1][parent_1][0]
+            while self.depths[parent_1]>depth_2:
+                list_power.append(self.parents[parent_1][1])
+                parent_1=self.parents[parent_1][0]
                 path.append(parent_1)
+                print(1)
             path.append(parent_1)
                 
-        else :
-            while self.dfs()[0][parent_2]>depth_1:
+        elif depth_2 > depth_1 :
+            while self.depths[parent_2]>depth_1:
                 L=[parent_2]+L
-                list_power.append(self.dfs()[1][parent_2][1])
-                parent_2=self.dfs()[1][parent_2][0]
+                list_power.append(self.parents[parent_2][1])
+                parent_2=self.parents[parent_2][0]
+                
             L=[parent_2]+L
                 
         while parent_1 != parent_2 :
-            path.append(self.dfs()[1][parent_1][0])
-            L=[self.dfs()[1][parent_2][0]]+L
-            list_power.append(self.dfs()[1][parent_1][1])
-            list_power.append(self.dfs()[1][parent_2][1])
-            parent_1= self.dfs()[1][parent_1][0]
-            parent_2= self.dfs()[1][parent_2][0]
+            path.append(self.parents[parent_1][0])
+            L=[self.parenst[parent_2][0]]+L
+            list_power.append(self.parents[parent_1][1])
+            list_power.append(self.parents[parent_2][1])
+            parent_1= self.parents[parent_1][0]
+            parent_2= self.parents[parent_2][0]
+            print(3)
 
         path.pop()
         path=path+L
@@ -320,6 +332,13 @@ def route_x_out(filename,filename_1): #question 6
             f.write(power_min)
         f.close()
 
+def knapsack(nbr, truck):
+    B = 25*(10^9)
+    data_path = "input/"
+    nbr = str(nbr)
+    g = data_path + "network." + nbr + ".in"
+    g = graph_from_file(g)
+    filename = data_path + "routes." + nbr + ".in"
 
 
 
