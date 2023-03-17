@@ -333,6 +333,16 @@ def route_x_out(filename,filename_1): #question 6
         f.close()
 
 def possible_trucks(self, file_truck, src, dest):
+    """_summary_
+    Args:
+        file_truck (_type_): _description_
+        src (_type_): _description_
+        dest (_type_): _description_
+
+    Returns:
+        dictionary: find the trucks that are possible among those of a file trucks.x.in
+        considering one graph and one journey in particular.
+    """
     with open(file_truck, "r") as file:
         n = file.readline()
         n = int(n)
