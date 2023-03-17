@@ -332,6 +332,19 @@ def route_x_out(filename,filename_1): #question 6
             f.write(power_min)
         f.close()
 
+def possible_trucks(self, file_truck, src, dest):
+    with open(file_truck, "r") as file:
+        n = file.readline()
+        d = dict()
+        for i in range(n):
+            truck = list(file_truck.readline().split())
+            truck[0]=power
+            if min_power(self, src, dest) >= power:
+                d[i] = True
+            else:
+                d[i] = False
+    return d
+
 def knapsack(nbr, truck):
     B = 25*(10^9)
     data_path = "input/"
