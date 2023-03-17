@@ -335,11 +335,13 @@ def route_x_out(filename,filename_1): #question 6
 def possible_trucks(self, file_truck, src, dest):
     with open(file_truck, "r") as file:
         n = file.readline()
+        n = int(n)
         d = dict()
         for i in range(n):
-            truck = list(file_truck.readline().split())
-            truck[0]=power
-            if min_power(self, src, dest) >= power:
+            truck = list(file.readline().split())
+            power = int(truck[0])
+            print(self.min_power(src, dest)[0])
+            if int(self.min_power(src, dest)[0]) >= power:
                 d[i] = True
             else:
                 d[i] = False
