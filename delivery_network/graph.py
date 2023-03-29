@@ -66,8 +66,6 @@ class Graph:
         self.graph[node1].append((node2, power_min, dist))
         self.graph[node2].append((node1, power_min, dist))
         self.nb_edges += 1
-        
-    
 
     def get_path_with_power(self, src, dest, power):
         visited={nodes:False for nodes in self.nodes}
@@ -134,7 +132,7 @@ class Graph:
         return L[i],self.get_path_with_power(src,dest,L[i])
 
     def dfs(self): #question 5 séance 2 
-        """Finds the deoth of a node relative to an origin node."""
+        """Finds the depth of a node relative to an origin node."""
         depth=0
         depths={}
         parents={self.nodes[0]:[self.nodes[0],0]}
@@ -347,7 +345,7 @@ def possible_trucks(self, file_truck, src, dest):
         n = file.readline()
         n = int(n)
         d = dict()
-        for i in range(n):
+        for i in range(1,n+1):
             truck = list(file.readline().split())
             power = int(truck[0])
             print(self.min_power(src, dest)[0])
@@ -355,6 +353,32 @@ def possible_trucks(self, file_truck, src, dest):
                 d[i] = True
             else:
                 d[i] = False
+    return d
+
+def useful_trucks(file_truck):
+    """_summary_
+
+    Args:
+        file_truck (_type_): _description_
+
+    Returns:
+        dictionary: find the trucks that are useful among those of a file trucks.x.in
+        i.e. cost_i < cost_j si use_i < use_j
+    """
+    f = open(file_truck, "r") 
+    lignes = f.readlines()
+    n = lignes[0]
+    n = int(n)
+    d = dict()
+    d[1] = "Useful"
+    for i in range(n):
+        last_truck = list(lignes[i-1])
+        truck = list(lignes[i])
+        last_cost = int(last_truck[1])
+        cost = int(truck[1])
+        d[i] = Useful
+        if last_cost > cost:
+            d[i-1] = "Useless"
     return d
 
 def knapsack(nbr, truck):
@@ -365,6 +389,7 @@ def knapsack(nbr, truck):
     g = graph_from_file(g)
     filename = data_path + "routes." + nbr + ".in"
 
+    return None
 
 
 
