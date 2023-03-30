@@ -330,6 +330,60 @@ def route_x_out(filename,filename_1): #question 6
             f.write(power_min)
         f.close()
 
+def useful_trucks(file_truck):
+    """_summary_
+
+    Args:
+        file_truck (_type_): _description_
+
+    Returns:
+        dictionary: find the trucks that are useful among those of a file trucks.x.in
+        i.e. cost_i < cost_j si use_i < use_j
+    """
+    f = open(file_truck, "r") 
+    lignes = f.readlines()
+    n = lignes[0]
+    n = int(n)
+    d = dict()
+    d[1] = "Useful"
+    for i in range(2, n+1):
+        last_truck = list(lignes[i-1].split())
+        truck = list(lignes[i].split())
+        last_cost = int(last_truck[1])
+        cost = int(truck[1])
+        d[i] = "Useful"
+        if last_cost > cost:
+            d[i-1] = "Useless"
+    return d
+
+def useful_trucks_list(file_truck):
+    """_summary_
+
+    Args:
+        file_truck (_type_): _description_
+
+    Returns:
+        goodtrucks: only keeps in a list the trucks that are useful among those of a file trucks.x.in
+        i.e. cost_i < cost_j si use_i < use_j
+        bemol: only works if the power of the trucks are set in an increasing order
+    """
+    f = open(file_truck, "r") 
+    lignes = f.readlines()
+    n = lignes[0]
+    n = int(n)
+    goodtrucks = []
+    first_truck = list(lignes[1].split())
+    goodtrucks.append(first_truck)
+    for i in range(2, n+1):
+        last_truck = list(lignes[i-1].split())
+        truck = list(lignes[i].split())
+        last_cost = int(last_truck[1])
+        cost = int(truck[1])
+        if last_cost > cost:
+            goodtrucks.pop()
+        goodtrucks.append(truck)
+    return goodtrucks
+
 def possible_trucks(self, file_truck, src, dest):
     """_summary_
     Args:
@@ -355,7 +409,9 @@ def possible_trucks(self, file_truck, src, dest):
                 d[i] = False
     return d
 
-def useful_trucks(file_truck):
+# Début brouillon
+# Fonction test qui regarde les premiers camions
+def useful_truckstest(file_truck):
     """_summary_
 
     Args:
@@ -371,15 +427,46 @@ def useful_trucks(file_truck):
     n = int(n)
     d = dict()
     d[1] = "Useful"
-    for i in range(n):
-        last_truck = list(lignes[i-1])
-        truck = list(lignes[i])
+    for i in range(2, 6):
+        last_truck = list(lignes[i-1].split())
+        truck = list(lignes[i].split())
         last_cost = int(last_truck[1])
         cost = int(truck[1])
-        d[i] = Useful
+        d[i] = "Useful"
+        print(truck)
+        print("last_cost = ", last_cost)
+        print("cost = ", cost)
         if last_cost > cost:
             d[i-1] = "Useless"
     return d
+
+def useful_trucks_listtest(file_truck):
+    """_summary_
+
+    Args:
+        file_truck (_type_): _description_
+
+    Returns:
+        dictionary: find the trucks that are useful among those of a file trucks.x.in
+        i.e. cost_i < cost_j si use_i < use_j
+    """
+    f = open(file_truck, "r") 
+    lignes = f.readlines()
+    n = lignes[0]
+    n = int(n)
+    goodtrucks = []
+    first_truck = list(lignes[1].split())
+    goodtrucks.append(first_truck)
+    for i in range(2, 6):
+        last_truck = list(lignes[i-1].split())
+        truck = list(lignes[i].split())
+        last_cost = int(last_truck[1])
+        cost = int(truck[1])
+        if last_cost > cost:
+            goodtrucks.pop()
+        goodtrucks.append(truck)
+    return goodtrucks
+# Fin brouillon
 
 def knapsack(nbr, truck):
     B = 25*(10^9)

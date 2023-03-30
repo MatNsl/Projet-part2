@@ -1,5 +1,5 @@
 from graph import Graph, graph_from_file, find, union, kruskal
-from graph import possible_trucks, useful_trucks
+from graph import possible_trucks, useful_trucks, useful_trucks_listtest
 
 
 data_path = "input/"
@@ -10,7 +10,8 @@ g = graph_from_file("input/network.1.in")
 res = possible_trucks(g, "input/trucks.0.in", 1, 5)
 print(res)
 
-useful_trucks("input/trucks.0.in")
+resbis = useful_trucks_listtest("input/trucks.1.in")
+print(resbis)
 
 """
 g_1=kruskal(g)
