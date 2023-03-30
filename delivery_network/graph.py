@@ -160,6 +160,72 @@ class Graph:
         self.depths = depths
         self.parents = parents
 
+    def dfsCMpro(self): #question 5 séance 2 
+        """Finds the deoth of a node relative to an origin node."""
+        depth=0
+        depths={}
+        parents={self.nodes[0]:[self.nodes[0],0]}
+        visited=[]
+        visited_1=[self.nodes[0]]
+
+        def explore(node,depth):
+            depths[node]=depth
+            visited.append(node)
+            for neighbor,power_min,dist in self.graph[node]:
+                if neighbor not in visited:
+                    explore(neighbor,depth+1)
+            return depths  
+              
+        depths=explore(self.nodes[0], 0)
+        
+        for nodes in self.nodes:
+            for neighbor,power_min,dist in self.graph[nodes]:
+                if neighbor not in visited_1 :
+                    visited_1.append(neighbor)
+                    parents[neighbor]=[nodes,power_min]
+        
+
+        return depths,parents
+
+    def get_power_and_pathCMpro(self,src,dest): #question 5 séance 2
+        """Finds the minimum power and the path from src to dest but using the minimum weight 
+        spanning tree.""" 
+        depth_1=self.dfs()[0][src]
+        depth_2=self.dfs()[0][dest]
+        parent_1=src
+        parent_2=dest
+        path=[parent_1]
+        L=[]
+        list_power=[]
+
+        if depth_1 > depth_2:
+            while self.dfs()[0][parent_1]>depth_2:
+                list_power.append(self.dfs()[1][parent_1][1])
+                parent_1=self.dfs()[1][parent_1][0]
+                path.append(parent_1)
+            path.append(parent_1)
+                
+        else :
+            while self.dfs()[0][parent_2]>depth_1:
+                L=[parent_2]+L
+                list_power.append(self.dfs()[1][parent_2][1])
+                parent_2=self.dfs()[1][parent_2][0]
+            L=[parent_2]+L
+                
+        while parent_1 != parent_2 :
+            path.append(self.dfs()[1][parent_1][0])
+            L=[self.dfs()[1][parent_2][0]]+L
+            list_power.append(self.dfs()[1][parent_1][1])
+            list_power.append(self.dfs()[1][parent_2][1])
+            parent_1= self.dfs()[1][parent_1][0]
+            parent_2= self.dfs()[1][parent_2][0]
+
+        path.pop()
+        path=path+L
+        print(path)
+        print(list_power)
+
+        return [max(list_power),path]
 
     def get_power_and_path(self,src,dest): #question 5 séance 2 
         depth_1=self.depths[src]
@@ -188,7 +254,7 @@ class Graph:
                 
         while parent_1 != parent_2 :
             path.append(self.parents[parent_1][0])
-            L=[self.parenst[parent_2][0]]+L
+            L=[self.parents[parent_2][0]]+L
             list_power.append(self.parents[parent_1][1])
             list_power.append(self.parents[parent_2][1])
             parent_1= self.parents[parent_1][0]
@@ -323,11 +389,13 @@ def route_x_out(filename,filename_1): #question 6
     g_mst=kruskal(g)
     f=open("input/route.x.out","a")
     with open(filename_1, "r") as file:
-        n = map(int, file.readline())
+        #n = map(int, file.readline())
+        n = int(file.readline())
         for j in range(n):
             src,dest,profit=list(map(int, file.readline().split()))
+            g_mst.dfs()
             power_min=g_mst.get_power_and_path(src,dest)[0]
-            f.write(power_min)
+            f.write(str(power_min))
         f.close()
 
 def useful_trucks(file_truck):
@@ -408,6 +476,41 @@ def possible_trucks(self, file_truck, src, dest):
             else:
                 d[i] = False
     return d
+
+def before_knapsack(self, file_truck, file_route):
+    """_summary_
+    Args:
+        file_truck (_type_): _description_
+        src (_type_): _description_
+        dest (_type_): _description_
+
+    Returns:
+        newlist: replace (min_power, utility) with (cost, utility)
+        considering one graph and one journey in particular.
+        dictionary: find the trucks that are possible among those of a file trucks.x.in
+        considering one graph and one journey in particular.
+    """
+    trajets = file_route.readlines()
+    nbr_routes = trajets[0]
+    route_x_out(self,file_route)
+    for route in range(1, nbr_routes+1):
+        oldlist = list(lignes[route].split())
+        src,dest,profit=list(map(int, file.readline().split()))
+    """if "possible":"""
+    newlist = None
+    with open(file_truck, "r") as file:
+        n = file.readline()
+        n = int(n)
+        d = dict()
+        for i in range(1,n+1):
+            truck = list(file.readline().split())
+            power = int(truck[0])
+            print(self.min_power(src, dest)[0])
+            if int(self.min_power(src, dest)[0]) >= power:
+                d[i] = True
+            else:
+                d[i] = False
+    return newlist
 
 # Début brouillon
 # Fonction test qui regarde les premiers camions
