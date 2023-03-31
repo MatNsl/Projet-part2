@@ -490,27 +490,38 @@ def before_knapsack(self, file_truck, file_route):
         dictionary: find the trucks that are possible among those of a file trucks.x.in
         considering one graph and one journey in particular.
     """
-    trajets = file_route.readlines()
+    global_list = [] # list containing sublists (cost, profit) for each route in our file
+    useful_trucks = useful_trucks_list(file_truck)
+    trajets = file_route.readline()
     nbr_routes = trajets[0]
-    route_x_out(self,file_route)
-    for route in range(1, nbr_routes+1):
-        oldlist = list(lignes[route].split())
-        src,dest,profit=list(map(int, file.readline().split()))
-    """if "possible":"""
-    newlist = None
-    with open(file_truck, "r") as file:
-        n = file.readline()
-        n = int(n)
-        d = dict()
-        for i in range(1,n+1):
-            truck = list(file.readline().split())
-            power = int(truck[0])
-            print(self.min_power(src, dest)[0])
-            if int(self.min_power(src, dest)[0]) >= power:
-                d[i] = True
-            else:
-                d[i] = False
-    return newlist
+    for route in range(1, nbr_routes+1): 
+        """ Considering one route at a time """
+        """ Finding the right truck to find the less costly solution """
+        route_out = route_x_out(self,file_route)
+        power_min = route_out.readline()
+        power_min = int(power_min)
+        newlist = []
+        power = 0
+        i = 0
+        while power < min_power:
+            little_truck = useful_trucks[i]
+            """ Brouillon
+            little_truck = list(file_truck.readline().split())
+            """
+            power = little_truck[0]
+            i=+1
+        right_truck = little_truck
+        """ Brouillon
+        right_truck = useful_trucks[i]
+        right_truck = list(file_truck.readline().split())
+        """
+        cost = right_truck[1]
+        newlist.append[cost]
+        """ Finding the profit associated with the considered route """
+        src,dest,profit=list(map(int, file_route.readline().split()))
+        newlist.append[profit]
+        global_list.append[newlist]
+    return global_list
 
 # Début brouillon
 # Fonction test qui regarde les premiers camions
