@@ -147,7 +147,7 @@ class Graph:
                     explore(neighbor,depth+1)
                     parents[neighbor]=[node,power_min]
      
-            return depths  
+            return depths
               
         depths=explore(self.nodes[0], 0)
         
@@ -190,8 +190,8 @@ class Graph:
     def get_power_and_pathCMpro(self,src,dest): #question 5 séance 2
         """Finds the minimum power and the path from src to dest but using the minimum weight 
         spanning tree.""" 
-        depth_1=self.dfs()[0][src]
-        depth_2=self.dfs()[0][dest]
+        depth_1=self.dfsCMpro()[0][src]
+        depth_2=self.dfsCMpro()[0][dest]
         parent_1=src
         parent_2=dest
         path=[parent_1]
@@ -199,26 +199,26 @@ class Graph:
         list_power=[]
 
         if depth_1 > depth_2:
-            while self.dfs()[0][parent_1]>depth_2:
-                list_power.append(self.dfs()[1][parent_1][1])
-                parent_1=self.dfs()[1][parent_1][0]
+            while self.dfsCMpro()[0][parent_1]>depth_2:
+                list_power.append(self.dfsCMpro()[1][parent_1][1])
+                parent_1=self.dfsCMpro()[1][parent_1][0]
                 path.append(parent_1)
             path.append(parent_1)
                 
         else :
-            while self.dfs()[0][parent_2]>depth_1:
+            while self.dfsCMpro()[0][parent_2]>depth_1:
                 L=[parent_2]+L
-                list_power.append(self.dfs()[1][parent_2][1])
-                parent_2=self.dfs()[1][parent_2][0]
+                list_power.append(self.dfsCMpro()[1][parent_2][1])
+                parent_2=self.dfsCMpro()[1][parent_2][0]
             L=[parent_2]+L
                 
         while parent_1 != parent_2 :
-            path.append(self.dfs()[1][parent_1][0])
-            L=[self.dfs()[1][parent_2][0]]+L
-            list_power.append(self.dfs()[1][parent_1][1])
-            list_power.append(self.dfs()[1][parent_2][1])
-            parent_1= self.dfs()[1][parent_1][0]
-            parent_2= self.dfs()[1][parent_2][0]
+            path.append(self.dfsCMpro()[1][parent_1][0])
+            L=[self.dfsCMpro()[1][parent_2][0]]+L
+            list_power.append(self.dfsCMpro()[1][parent_1][1])
+            list_power.append(self.dfsCMpro()[1][parent_2][1])
+            parent_1= self.dfsCMpro()[1][parent_1][0]
+            parent_2= self.dfsCMpro()[1][parent_2][0]
 
         path.pop()
         path=path+L
@@ -384,7 +384,12 @@ def estimation_2(filename,filename_1): #question 6 séance 2
     return ((end-start)/20)*n
 
 def route_x_out(filename,filename_1): #question 6 
+    """_summary_
 
+    Args:
+        filename (_type_): network
+        filename_1 (_type_): routes
+    """
     g=graph_from_file(filename)
     g_mst=kruskal(g)
     f=open("input/route.x.out","a")
@@ -394,7 +399,7 @@ def route_x_out(filename,filename_1): #question 6
         for j in range(n):
             src,dest,profit=list(map(int, file.readline().split()))
             g_mst.dfs()
-            power_min=g_mst.get_power_and_path(src,dest)[0]
+            power_min=g_mst.get_power_and_pathCMpro(src,dest)[0]
             f.write(str(power_min))
         f.close()
 
@@ -487,8 +492,8 @@ def before_knapsack(self, file_truck, file_route):
     Returns:
         newlist: replace (min_power, utility) with (cost, utility)
         considering one graph and one journey in particular.
-        dictionary: find the trucks that are possible among those of a file trucks.x.in
-        considering one graph and one journey in particular.
+        I should add sth to have the truck associated with each route
+        --> dictionary?
     """
     global_list = [] # list containing sublists (cost, profit) for each route in our file
     useful_trucks = useful_trucks_list(file_truck)
@@ -522,6 +527,57 @@ def before_knapsack(self, file_truck, file_route):
         newlist.append[profit]
         global_list.append[newlist]
     return global_list
+
+""" Inspired from :
+https://bitbucket.org/trebsirk/algorithms/src/master/knapsack.py
+"""
+import matplotlib
+import matplotlib.pyplot as plt
+
+def powerset(items):
+    res = [[]]
+    for item in items:
+	    newset = [r+[item] for r in res]
+	    res.extend(newset)
+    return res
+
+def knapsack_brute_force(items):
+    B = 25*(10^9) 
+    """ B = max_weight """
+    knapsack = []
+    best_weight = 0
+    best_value = 0
+    for item_set in powerset(items):
+    	set_weight = sum(map(weight, item_set))
+    	set_value = sum(map(value, item_set))
+    	if set_value > best_value and set_weight <= B:
+    		best_weight = set_weight
+    		best_value = set_value
+    		knapsack = item_set
+    return knapsack, best_weight, best_value
+
+def approximative_knapsack(nbr, truck):
+    """Projet-part2/
+    Approximative solution
+    We choose the most profitable routes 
+    until we cannot affect one single truck to a route
+    Should return a dictionary with
+    key = route
+    value = the most effective truck
+    """
+    B = 25*(10^9)
+    d = dict()
+    data_path = "input/"
+    nbr = str(nbr)
+    g = data_path + "network." + nbr + ".in"
+    g = graph_from_file(g)
+    filename = data_path + "routes." + nbr + ".in"
+    """ """
+    totalcost = 0
+    while totalcost < B:
+        totalcost += cost
+    totalcost -= cost
+    return d
 
 # Début brouillon
 # Fonction test qui regarde les premiers camions
