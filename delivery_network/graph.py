@@ -528,7 +528,7 @@ def before_knapsack(self, file_truck, file_route):
         global_list.append[newlist]
     return global_list
 
-""" Inspired from :
+""" What comes next is inspired from :
 https://bitbucket.org/trebsirk/algorithms/src/master/knapsack.py
 """
 import matplotlib
@@ -556,7 +556,7 @@ def knapsack_brute_force(items):
     		knapsack = item_set
     return knapsack, best_weight, best_value
 
-def approximative_knapsack(nbr, truck):
+def approximative_knapsack(self, file_truck, file_route):
     """Projet-part2/
     Approximative solution
     We choose the most profitable routes 
@@ -567,17 +567,24 @@ def approximative_knapsack(nbr, truck):
     """
     B = 25*(10^9)
     d = dict()
+    super_list = before_knapsack(self, file_truck, file_route)
+    """
     data_path = "input/"
     nbr = str(nbr)
     g = data_path + "network." + nbr + ".in"
     g = graph_from_file(g)
     filename = data_path + "routes." + nbr + ".in"
+    """
     """ """
     totalcost = 0
     while totalcost < B:
-        totalcost += cost
+        for i in super_list:
+            cost = i[0]
+            totalcost += cost
+            d[i] = right_truck # attention, right_truck pas défini
     totalcost -= cost
-    return d
+    d.popitem()
+    return d, totalcost
 
 # Début brouillon
 # Fonction test qui regarde les premiers camions
