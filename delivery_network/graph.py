@@ -28,7 +28,6 @@ class Graph:
         self.graph = dict([(n, []) for n in nodes])
         self.nb_nodes = len(nodes)
         self.nb_edges = 0
-    
 
     def __str__(self):
         """Prints the graph as a list of neighbors for each node (one per line)"""
@@ -412,6 +411,7 @@ def useful_trucks(file_truck):
     Returns:
         dictionary: find the trucks that are useful among those of a file trucks.x.in
         i.e. cost_i < cost_j si use_i < use_j
+        The goal is to do preprocessing
     """
     f = open(file_truck, "r") 
     lignes = f.readlines()
@@ -438,7 +438,7 @@ def useful_trucks_list(file_truck):
     Returns:
         goodtrucks: only keeps in a list the trucks that are useful among those of a file trucks.x.in
         i.e. cost_i < cost_j si use_i < use_j
-        bemol: only works if the power of the trucks are set in an increasing order
+        Qualification: only works if the power of the trucks are set in an increasing order
     """
     f = open(file_truck, "r") 
     lignes = f.readlines()
@@ -485,17 +485,18 @@ def possible_trucks(self, file_truck, src, dest):
 def before_knapsack(self, file_truck, file_route):
     """_summary_
     Args:
+        self (_type_): _description_
         file_truck (_type_): _description_
-        src (_type_): _description_
-        dest (_type_): _description_
+        file_route (_type_): _description_
 
     Returns:
         newlist: replace (min_power, utility) with (cost, utility)
-        considering one graph and one journey in particular.
+        considering one graph and one file containing routes in particular.
         I should add sth to have the truck associated with each route
-        --> dictionary?
+        --> dictionary? or list?
     """
     global_list = [] # list containing sublists (cost, profit) for each route in our file
+    # Maybe subsublists in fact
     useful_trucks = useful_trucks_list(file_truck)
     trajets = file_route.readline()
     nbr_routes = trajets[0]
@@ -521,11 +522,16 @@ def before_knapsack(self, file_truck, file_route):
         right_truck = list(file_truck.readline().split())
         """
         cost = right_truck[1]
-        newlist.append[cost]
+        subsublist.append[cost]
         """ Finding the profit associated with the considered route """
         src,dest,profit=list(map(int, file_route.readline().split()))
-        newlist.append[profit]
-        global_list.append[newlist]
+        subsublist.append[profit]
+        """ subsublist = [cost, profit] for a given route"""
+        sublist = []
+        sublist.append(sublist)
+        sublist.append(right_truck)
+        """ sublist = [[cost, profit], [power, cost] of the right truck for this route]"""
+        global_list.append[sublist]
     return global_list
 
 """ What comes next is inspired from :
@@ -556,8 +562,8 @@ def knapsack_brute_force(items):
     		knapsack = item_set
     return knapsack, best_weight, best_value
 
-def approximative_knapsack(self, file_truck, file_route):
-    """Projet-part2/
+def approximative_knapsack(self, file_truck, file_route): # I take this for granted
+    """
     Approximative solution
     We choose the most profitable routes 
     until we cannot affect one single truck to a route
@@ -579,11 +585,32 @@ def approximative_knapsack(self, file_truck, file_route):
     totalcost = 0
     while totalcost < B:
         for i in super_list:
-            cost = i[0]
+            cost = i[0][0]
             totalcost += cost
-            d[i] = right_truck # attention, right_truck pas défini
+            j = i[0]
+            right_truck = i[1]
+            d[j] = right_truck
     totalcost -= cost
     d.popitem()
+    return d, totalcost
+
+def bruteforce_knapsack():
+    B = 25*(10^9)
+    d = dict()
+    super_list = before_knapsack(self, file_truck, file_route)
+    # possibility: (totalcost, totalprofit) for one combination of trucks associated with routes
+    
+    S.append(possibility)
+    return None # d, totalcost
+
+def dynamic_knapsack():
+    B = 25*(10^9)
+    d = dict()
+    super_list = before_knapsack(self, file_truck, file_route)
+
+    for cost in range(0,B):
+        "blabla"
+
     return d, totalcost
 
 # Début brouillon
