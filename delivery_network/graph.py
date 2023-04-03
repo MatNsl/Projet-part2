@@ -562,7 +562,7 @@ def knapsack_brute_force(items):
     		knapsack = item_set
     return knapsack, best_weight, best_value
 
-def approximative_knapsack(self, file_truck, file_route): # I take this for granted
+def greedy_knapsack(self, file_truck, file_route): # I take this for granted
     """
     Approximative solution
     We choose the most profitable routes 
@@ -608,10 +608,58 @@ def dynamic_knapsack():
     d = dict()
     super_list = before_knapsack(self, file_truck, file_route)
 
-    for cost in range(0,B):
-        "blabla"
+    for cost in range(0,B+1):
+        M[0, w] = 0
+    for k in range(1, n+1):
+        M[k,0] = 0
 
     return d, totalcost
+
+def knapSack(self, file_truck, file_route, wt, val, n):
+    B = 25*(10^9)
+    K = [[0 for x in range(W + 1)] for x in range(n + 1)]
+    d = before_knapsack(self, file_truck, file_route)
+    profit = d[0][1] # liste des profits
+    # wt = cost
+    # Build table K[][] in bottom up manner
+    for i in range(n + 1):
+        for w in range(W + 1):
+            if i == 0 or w == 0:
+                K[i][w] = 0
+            elif wt[i-1] <= w:
+                K[i][w] = max(profit[i-1] + K[i-1][w-wt[i-1]],  K[i-1][w])
+            else:
+                K[i][w] = K[i-1][w]
+  
+    return K[n][B]
+
+""" What follows comes from the Internet """
+# A Dynamic Programming based Python 
+# Program for 0-1 Knapsack problem
+# Returns the maximum value that can 
+# be put in a knapsack of capacity W
+def knapSack(W, wt, val, n):
+    K = [[0 for x in range(W + 1)] for x in range(n + 1)]
+  
+    # Build table K[][] in bottom up manner
+    for i in range(n + 1):
+        for w in range(W + 1):
+            if i == 0 or w == 0:
+                K[i][w] = 0
+            elif wt[i-1] <= w:
+                K[i][w] = max(val[i-1] + K[i-1][w-wt[i-1]],  K[i-1][w])
+            else:
+                K[i][w] = K[i-1][w]
+  
+    return K[n][W]
+
+# Driver program to test above function
+val = [60, 100, 120]
+wt = [10, 20, 30]
+W = 50
+n = len(val)
+print(knapSack(W, wt, val, n))
+
 
 # Début brouillon
 # Fonction test qui regarde les premiers camions
