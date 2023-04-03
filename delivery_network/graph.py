@@ -615,8 +615,12 @@ def dynamic_knapsack():
 
     return d, totalcost
 
-def knapSack(self, file_truck, file_route, wt, val, n):
+def dynamicbis_knapsack(self, file_truck, file_route):
+    """ 
+    Adapté d'Internet, reste à tester
+    """
     B = 25*(10^9)
+    n = file_truck.readline()
     K = [[0 for x in range(W + 1)] for x in range(n + 1)]
     d = before_knapsack(self, file_truck, file_route)
     profit = d[0][1] # liste des profits
@@ -627,7 +631,9 @@ def knapSack(self, file_truck, file_route, wt, val, n):
             if i == 0 or w == 0:
                 K[i][w] = 0
             elif wt[i-1] <= w:
-                K[i][w] = max(profit[i-1] + K[i-1][w-wt[i-1]],  K[i-1][w])
+                profit = d[i-1][0][1]
+                cost = d[i-1][0][0]
+                K[i][w] = max(profit + K[i-1][w-cost],  K[i-1][w])
             else:
                 K[i][w] = K[i-1][w]
   
