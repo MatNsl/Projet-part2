@@ -131,12 +131,11 @@ class Graph:
         return L[i],self.get_path_with_power(src,dest,L[i])
 
     def dfs(self): #question 5 séance 2 
-        """Finds the depth of a node relative to an origin node."""
+        """Finds the deoth of a node relative to an origin node."""
         depth=0
         depths={}
         parents={self.nodes[0]:[self.nodes[0],0]}
         visited=[]
-        visited_1=[self.nodes[0]]
 
         def explore(node,depth):
             depths[node]=depth
@@ -145,19 +144,17 @@ class Graph:
                 if neighbor not in visited:
                     explore(neighbor,depth+1)
                     parents[neighbor]=[node,power_min]
-     
-            return depths
+            return depths, parents  
               
-        depths=explore(self.nodes[0], 0)
+        depths,parents=explore(self.nodes[0], 0)
         
-  #      for nodes in self.nodes:
-   #         for neighbor,power_min,dist in self.graph[nodes]:
-    #            if neighbor not in visited_1 :
-     #               visited_1.append(neighbor)
-      #              parents[neighbor]=[nodes,power_min]
+        """for nodes in self.nodes:
+            for neighbor,power_min,dist in self.graph[nodes]:
+                if neighbor not in visited_1 :
+                    visited_1.append(neighbor)
+                    parents[neighbor]=[nodes,power_min]"""
         
-        self.depths = depths
-        self.parents = parents
+        return depths, parents
 
     def dfsCMpro(self): #question 5 séance 2 
         """Finds the deoth of a node relative to an origin node."""
@@ -182,7 +179,6 @@ class Graph:
                 if neighbor not in visited_1 :
                     visited_1.append(neighbor)
                     parents[neighbor]=[nodes,power_min]
-        
 
         return depths,parents
 
@@ -383,23 +379,18 @@ def estimation_2(filename,filename_1): #question 6 séance 2
     return ((end-start)/20)*n
 
 def route_x_out(filename,filename_1): #question 6 
-    """_summary_
-
-    Args:
-        filename (_type_): network
-        filename_1 (_type_): routes
-    """
+    #filename_1 est le chemin associé à routex et filename celui associé à network
     g=graph_from_file(filename)
     g_mst=kruskal(g)
     f=open("input/route.x.out","a")
     with open(filename_1, "r") as file:
-        #n = map(int, file.readline())
         n = int(file.readline())
-        for j in range(n):
+        f.write(str(n)+"\n")
+        for j in range(n-1):
             src,dest,profit=list(map(int, file.readline().split()))
             g_mst.dfs()
-            power_min=g_mst.get_power_and_pathCMpro(src,dest)[0]
-            f.write(str(power_min))
+            power_min=g_mst.get_power_and_path(src,dest)[0]
+            f.write(str(power_min)+"\n")
         f.close()
 
 def useful_trucks(file_truck):
@@ -737,5 +728,52 @@ def knapsack(nbr, truck):
     return None
 
 
+
+""" Old version
+
+    def dfs(self): #question 5 séance 2 
+        
+        depth=0
+        depths={}
+        parents={self.nodes[0]:[self.nodes[0],0]}
+        visited=[]
+        visited_1=[self.nodes[0]]
+
+        def explore(node,depth):
+            depths[node]=depth
+            visited.append(node)
+            for neighbor,power_min,dist in self.graph[node]:
+                if neighbor not in visited:
+                    explore(neighbor,depth+1)
+                    parents[neighbor]=[node,power_min]
+     
+            return depths
+              
+        depths=explore(self.nodes[0], 0)
+        
+  #      for nodes in self.nodes:
+   #         for neighbor,power_min,dist in self.graph[nodes]:
+    #            if neighbor not in visited_1 :
+     #               visited_1.append(neighbor)
+      #              parents[neighbor]=[nodes,power_min]
+        
+        self.depths = depths
+        self.parents = parents
+
+def route_x_out(filename,filename_1): #question 6 
+
+    g=graph_from_file(filename)
+    g_mst=kruskal(g)
+    f=open("input/route.x.out","a")
+    with open(filename_1, "r") as file:
+        #n = map(int, file.readline())
+        n = int(file.readline())
+        for j in range(n):
+            src,dest,profit=list(map(int, file.readline().split()))
+            g_mst.dfs()
+            power_min=g_mst.get_power_and_pathCMpro(src,dest)[0]
+            f.write(str(power_min))
+        f.close()
+"""
 
 
