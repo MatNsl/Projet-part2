@@ -1,10 +1,11 @@
 from graph import Graph, graph_from_file, find, union, kruskal
-from graph import possible_trucks, useful_trucks, useful_trucks_listtest, route_x_out
+from graph import route_x_out, preprocessing_test, greedy_knapsack, before_knapsack
 
-g = kruskal(graph_from_file("input/network.1.in"))
-print(g.dfsCMpro())
 
 # route_x_out("input/network.1.in", "input/routes.1.in")
+
+before_knapsack("input/network.1.in", "input/trucks.1.in", "input/routes.1.in")
+# greedy_knapsack("network.1.in", "trucks.1.in", "routes.1.in")
 
 
 """

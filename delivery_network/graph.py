@@ -105,7 +105,6 @@ class Graph:
                 liste.append(dfs(nodes))
         return liste 
 
-
     def connected_components_set(self):
         """
         The result should be a set of frozensets (one per component), 
@@ -156,7 +155,7 @@ class Graph:
         
         return depths, parents
 
-    def dfsCMpro(self): #question 5 séance 2 
+    def depths(self): #question 5 séance 2 
         """Finds the deoth of a node relative to an origin node."""
         depth=0
         depths={}
@@ -393,6 +392,46 @@ def route_x_out(filename,filename_1): #question 6
             f.write(str(power_min)+"\n")
         f.close()
 
+# Séance 4 
+
+def preprocessing_test(filename):
+    with open(filename, "r") as file:
+        n=int(file.readline())
+        truck=[]
+        for i in range(n):
+            truck.append(list(map(int, file.readline().split())))
+
+
+        truck_cout=sorted(truck, key=lambda item: item[1])
+        print(truck_cout)
+        to_delete=[]
+        for i in range(len(truck_cout)-1):
+            for j in range(i+1,len(truck_cout)):
+                if truck_cout[j][0]<=truck_cout[i][0] and truck_cout[j] not in to_delete:
+                    to_delete.append(truck_cout[j])
+                    print(to_delete)
+                    print(i,j)
+
+        for i in range(len(to_delete)):
+            truck_cout.remove(to_delete[i])
+
+
+        truck_cout_2=sorted(truck_cout, key=lambda item: item[0])
+        print(truck_cout_2)
+
+        to_delete_2=[]
+        for i in range(1,len(truck_cout_2)):
+            for j in range(0,i):
+                if truck_cout_2[j][1]>=truck_cout_2[i][1] and truck_cout_2[j] not in to_delete_2:
+                    to_delete_2.append(truck_cout[j])
+                    print(to_delete_2) 
+                    print(i,j)
+
+        for j in range(len(to_delete_2)):
+            truck_cout_2.remove(to_delete_2[j])
+
+    return truck_cout_2
+
 def useful_trucks(file_truck):
     """_summary_
 
@@ -488,9 +527,10 @@ def before_knapsack(self, file_truck, file_route):
     """
     global_list = [] # list containing sublists (cost, profit) for each route in our file
     # Maybe subsublists in fact
-    useful_trucks = useful_trucks_list(file_truck)
-    trajets = file_route.readline()
-    nbr_routes = trajets[0]
+    useful_trucks = preprocessing_test(file_truck)
+    f = open(file_route, "r") 
+    trajets = f.readline()
+    nbr_routes = int(trajets[0])
     for route in range(1, nbr_routes+1): 
         """ Considering one route at a time """
         """ Finding the right truck to find the less costly solution """
@@ -523,6 +563,7 @@ def before_knapsack(self, file_truck, file_route):
         sublist.append(right_truck)
         """ sublist = [[cost, profit], [power, cost] of the right truck for this route]"""
         global_list.append[sublist]
+    f.close()
     return global_list
 
 """ What comes next is inspired from :
@@ -564,7 +605,7 @@ def greedy_knapsack(self, file_truck, file_route): # I take this for granted
     """
     B = 25*(10^9)
     d = dict()
-    super_list = before_knapsack(self, file_truck, file_route)
+    super_list = preprocessing_test(self, file_truck, file_route)
     """
     data_path = "input/"
     nbr = str(nbr)
@@ -651,11 +692,11 @@ def knapSack(W, wt, val, n):
     return K[n][W]
 
 # Driver program to test above function
-val = [60, 100, 120]
-wt = [10, 20, 30]
-W = 50
-n = len(val)
-print(knapSack(W, wt, val, n))
+# val = [60, 100, 120]
+# wt = [10, 20, 30]
+# W = 50
+# n = len(val)
+# print(knapSack(W, wt, val, n))
 
 
 # Début brouillon
