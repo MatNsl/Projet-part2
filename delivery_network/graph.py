@@ -362,7 +362,7 @@ def route_x_out(filename,filename_1): #question 6
     with open(filename_1, "r") as file:
         n = int(file.readline())
         f.write(str(n)+"\n")
-        for j in range(n-1):
+        for j in range(n):
             src,dest,profit=list(map(int, file.readline().split()))
             g_mst.dfs()
             power_min=g_mst.get_power_and_path(src,dest)[0]
@@ -516,38 +516,29 @@ def knapsack_brute_force(items):
     		knapsack = item_set
     return knapsack, best_weight, best_value
 
-def greedy_knapsack(self, file_route, file_truck): # I take this for granted
+def greedy_knapsack(self, file_route, file_truck):
     """
     Approximative solution
     We choose the most profitable routes 
     until we cannot affect one single truck to a route
-    Should return a dictionary with
-    key = route
-    value = the most effective truck
+    Should return a list with
+    for each route in routes : the truck chosen and the profit
+    and the cost of the approximative solution
     """
-    B = 100
-    # 25*(10^9)
+    B = 25*(10**9)
     Res = []
     super_list = etape_2(self, file_route, file_truck)
-    """
-    data_path = "input/"
-    nbr = str(nbr)
-    g = data_path + "network." + nbr + ".in"
-    g = graph_from_file(g)
-    filename = data_path + "routes." + nbr + ".in"
-    """
-    """ """
     totalcost = 0
-    while totalcost < B:
-        for i in super_list:
-            cost = i[1]
-            totalcost += cost
+
+    for i in super_list:
+        cost = i[1]
+        totalcost += cost
+        if totalcost <= B:
             profit_route = i[2]
             right_truck = [[i[0]] + [i[1]]]
-            # print(right_truck)
             Res.append(right_truck + [profit_route])
-    totalcost -= cost
-    Res.pop()
+        else:
+            totalcost -= cost
     return Res, totalcost
 
 def bruteforce_knapsack():
