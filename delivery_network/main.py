@@ -4,8 +4,11 @@ from graph import route_x_out, preprocessing_test, greedy_knapsack, before_knaps
 
 # route_x_out("input/network.1.in", "input/routes.1.in")
 
+# print(preprocessing_test("input/trucks.1.in")) OK
+
 # before_knapsack("input/network.1.in", "input/trucks.1.in", "input/routes.1.in")
-print(etape_2("input/network.1.in","input/routes.1.in", "input/trucks.1.in"))
+route_x_out("input/network.1.in", "input/routes.1.in")
+# print(etape_2("input/network.1.in","input/routes.1.in", "input/trucks.1.in"))
 
 # print(greedy_knapsack("input/network.1.in","input/routes.1.in", "input/trucks.1.in"))
 # etape_2(filename,filename_1,filename_2)

@@ -86,7 +86,7 @@ class Graph:
         
         t=visite(src,path)
         return t
-    
+
 
     def connected_components(self):
         liste=[]
@@ -237,6 +237,7 @@ class Graph:
         path=path+L
 
         return [max(list_power),path]
+
 
 
 
