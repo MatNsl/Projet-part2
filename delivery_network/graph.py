@@ -153,31 +153,6 @@ class Graph:
                     visited_1.append(neighbor)
                     parents[neighbor]=[nodes,power_min]"""
         
-        return depths, parents
-
-    def depths(self): #question 5 séance 2 
-        """Finds the deoth of a node relative to an origin node."""
-        depth=0
-        depths={}
-        parents={self.nodes[0]:[self.nodes[0],0]}
-        visited=[]
-        visited_1=[self.nodes[0]]
-
-        def explore(node,depth):
-            depths[node]=depth
-            visited.append(node)
-            for neighbor,power_min,dist in self.graph[node]:
-                if neighbor not in visited:
-                    explore(neighbor,depth+1)
-            return depths  
-              
-        depths=explore(self.nodes[0], 0)
-        
-        for nodes in self.nodes:
-            for neighbor,power_min,dist in self.graph[nodes]:
-                if neighbor not in visited_1 :
-                    visited_1.append(neighbor)
-                    parents[neighbor]=[nodes,power_min]
 
         return depths,parents
 
@@ -221,49 +196,49 @@ class Graph:
 
         return [max(list_power),path]
 
-    def get_power_and_path(self,src,dest): #question 5 séance 2 
-        depth_1=self.depths[src]
-        depth_2=self.depths[dest]
+    def get_power_and_path(self,src,dest): #question 5 séance 2
+        """Finds the minimum power and the path from src to dest but using the minimum weight 
+        spanning tree.""" 
+        depth_1=self.dfs()[0][src]
+        depth_2=self.dfs()[0][dest]
         parent_1=src
         parent_2=dest
         path=[parent_1]
-        L=[]
+        L=[dest]
         list_power=[]
 
-        if depth_1 > depth_2:
-            while self.depths[parent_1]>depth_2:
-                list_power.append(self.parents[parent_1][1])
-                parent_1=self.parents[parent_1][0]
+
+        if src==dest :
+            return [0,src] 
+        else : 
+            if depth_1 > depth_2:
+                while self.dfs()[0][parent_1]>depth_2:
+                    list_power.append(self.dfs()[1][parent_1][1])
+                    parent_1=self.dfs()[1][parent_1][0]
+                    path.append(parent_1)
                 path.append(parent_1)
-                print(1)
-            path.append(parent_1)
-                
-        elif depth_2 > depth_1 :
-            while self.depths[parent_2]>depth_1:
-                L=[parent_2]+L
-                list_power.append(self.parents[parent_2][1])
-                parent_2=self.parents[parent_2][0]
-                
-            L=[parent_2]+L
-                
-        while parent_1 != parent_2 :
-            path.append(self.parents[parent_1][0])
-            L=[self.parents[parent_2][0]]+L
-            list_power.append(self.parents[parent_1][1])
-            list_power.append(self.parents[parent_2][1])
-            parent_1= self.parents[parent_1][0]
-            parent_2= self.parents[parent_2][0]
-            print(3)
+                    
+            elif depth_1 < depth_2:
+                while self.dfs()[0][parent_2]>depth_1:
+                    list_power.append(self.dfs()[1][parent_2][1])
+                    parent_2=self.dfs()[1][parent_2][0]
+                    L=[parent_2]+L
+                L=[parent_2]+L 
+                    
+            while parent_1 != parent_2 :
+                path.append(self.dfs()[1][parent_1][0])
+                L=[self.dfs()[1][parent_2][0]]+L
+                list_power.append(self.dfs()[1][parent_1][1])
+                list_power.append(self.dfs()[1][parent_2][1])
+                parent_1= self.dfs()[1][parent_1][0]
+                parent_2= self.dfs()[1][parent_2][0]
 
         path.pop()
         path=path+L
-        print(path)
-        print(list_power)
 
         return [max(list_power),path]
 
 
-        
 
 
 def graph_from_file(filename):
@@ -297,6 +272,7 @@ def graph_from_file(filename):
             else:
                 raise Exception("Format incorrect")
     return g
+
 
 def find(nodes, link): #on veut trouver grâce à cette fonction dans quel graphe le noeud est.
         #si deux noeuds ont le même link alors ils sont dans le même graphe
@@ -394,6 +370,7 @@ def route_x_out(filename,filename_1): #question 6
 
 # Séance 4 
 
+
 def preprocessing_test(filename):
     with open(filename, "r") as file:
         n=int(file.readline())
@@ -403,114 +380,58 @@ def preprocessing_test(filename):
 
 
         truck_cout=sorted(truck, key=lambda item: item[1])
-        print(truck_cout)
         to_delete=[]
         for i in range(len(truck_cout)-1):
             for j in range(i+1,len(truck_cout)):
                 if truck_cout[j][0]<=truck_cout[i][0] and truck_cout[j] not in to_delete:
                     to_delete.append(truck_cout[j])
-                    print(to_delete)
-                    print(i,j)
 
         for i in range(len(to_delete)):
             truck_cout.remove(to_delete[i])
 
 
         truck_cout_2=sorted(truck_cout, key=lambda item: item[0])
-        print(truck_cout_2)
 
         to_delete_2=[]
         for i in range(1,len(truck_cout_2)):
             for j in range(0,i):
                 if truck_cout_2[j][1]>=truck_cout_2[i][1] and truck_cout_2[j] not in to_delete_2:
                     to_delete_2.append(truck_cout[j])
-                    print(to_delete_2) 
-                    print(i,j)
 
         for j in range(len(to_delete_2)):
             truck_cout_2.remove(to_delete_2[j])
 
     return truck_cout_2
 
-def useful_trucks(file_truck):
-    """_summary_
 
-    Args:
-        file_truck (_type_): _description_
+def etape_2(filename,filename_1,filename_2):
+    """ Returns a list of lists. Each list is [power_of the truck, cost of the truck, profit of the route]"""
+#filename pour network, filename_1 pour routes et filename_2 pour trucks
+    route_x_out(filename, filename_1)
+    cout_profit=[]
+    power=[]
+    trajet=[]
+    trucks=preprocessing_test(filename_2)
+    trucks_possible=[]
+    truck_possible=[]
+    with open("input/route.x.out","r") as file:
+        m=int(file.readline())
+        for j in range(m):
+            power.append(int(file.readline())) #liste avec les puissances min pour chaque trajet
+    with open(filename_1, "r") as file:
+        n=int(file.readline())
+        for j in range(n):
+            trajet.append(list(map(int, file.readline().split()))) #liste avec les trajets et leurs profits
+        for j in range(len(power)):
+            trucks_possible=[]
+            for k in range(len(trucks)):
+                if trucks[k][0]>=power[j]:
+                    trucks_possible.append(trucks[k]) #on récupère les camions dont la puissance permet de réaliser le trajet
+            truck_possible=sorted(trucks_possible, key=lambda item: item[1])
+            cout_profit.append(truck_possible[0]+[trajet[j][2]]) #on stocke le camion possible dont le cout est minimum et le profit sur ce trajet
+            trucks_possible=[]
+    return cout_profit
 
-    Returns:
-        dictionary: find the trucks that are useful among those of a file trucks.x.in
-        i.e. cost_i < cost_j si use_i < use_j
-        The goal is to do preprocessing
-    """
-    f = open(file_truck, "r") 
-    lignes = f.readlines()
-    n = lignes[0]
-    n = int(n)
-    d = dict()
-    d[1] = "Useful"
-    for i in range(2, n+1):
-        last_truck = list(lignes[i-1].split())
-        truck = list(lignes[i].split())
-        last_cost = int(last_truck[1])
-        cost = int(truck[1])
-        d[i] = "Useful"
-        if last_cost > cost:
-            d[i-1] = "Useless"
-    return d
-
-def useful_trucks_list(file_truck):
-    """_summary_
-
-    Args:
-        file_truck (_type_): _description_
-
-    Returns:
-        goodtrucks: only keeps in a list the trucks that are useful among those of a file trucks.x.in
-        i.e. cost_i < cost_j si use_i < use_j
-        Qualification: only works if the power of the trucks are set in an increasing order
-    """
-    f = open(file_truck, "r") 
-    lignes = f.readlines()
-    n = lignes[0]
-    n = int(n)
-    goodtrucks = []
-    first_truck = list(lignes[1].split())
-    goodtrucks.append(first_truck)
-    for i in range(2, n+1):
-        last_truck = list(lignes[i-1].split())
-        truck = list(lignes[i].split())
-        last_cost = int(last_truck[1])
-        cost = int(truck[1])
-        if last_cost > cost:
-            goodtrucks.pop()
-        goodtrucks.append(truck)
-    return goodtrucks
-
-def possible_trucks(self, file_truck, src, dest):
-    """_summary_
-    Args:
-        file_truck (_type_): _description_
-        src (_type_): _description_
-        dest (_type_): _description_
-
-    Returns:
-        dictionary: find the trucks that are possible among those of a file trucks.x.in
-        considering one graph and one journey in particular.
-    """
-    with open(file_truck, "r") as file:
-        n = file.readline()
-        n = int(n)
-        d = dict()
-        for i in range(1,n+1):
-            truck = list(file.readline().split())
-            power = int(truck[0])
-            print(self.min_power(src, dest)[0])
-            if int(self.min_power(src, dest)[0]) >= power:
-                d[i] = True
-            else:
-                d[i] = False
-    return d
 
 def before_knapsack(self, file_truck, file_route):
     """_summary_
@@ -594,7 +515,7 @@ def knapsack_brute_force(items):
     		knapsack = item_set
     return knapsack, best_weight, best_value
 
-def greedy_knapsack(self, file_truck, file_route): # I take this for granted
+def greedy_knapsack(self, file_route, file_truck): # I take this for granted
     """
     Approximative solution
     We choose the most profitable routes 
@@ -603,9 +524,10 @@ def greedy_knapsack(self, file_truck, file_route): # I take this for granted
     key = route
     value = the most effective truck
     """
-    B = 25*(10^9)
-    d = dict()
-    super_list = preprocessing_test(self, file_truck, file_route)
+    B = 100
+    # 25*(10^9)
+    Res = []
+    super_list = etape_2(self, file_route, file_truck)
     """
     data_path = "input/"
     nbr = str(nbr)
@@ -617,14 +539,15 @@ def greedy_knapsack(self, file_truck, file_route): # I take this for granted
     totalcost = 0
     while totalcost < B:
         for i in super_list:
-            cost = i[0][0]
+            cost = i[1]
             totalcost += cost
-            j = i[0]
-            right_truck = i[1]
-            d[j] = right_truck
+            profit_route = i[2]
+            right_truck = [[i[0]] + [i[1]]]
+            # print(right_truck)
+            Res.append(right_truck + [profit_route])
     totalcost -= cost
-    d.popitem()
-    return d, totalcost
+    Res.pop()
+    return Res, totalcost
 
 def bruteforce_knapsack():
     B = 25*(10^9)
@@ -698,66 +621,6 @@ def knapSack(W, wt, val, n):
 # n = len(val)
 # print(knapSack(W, wt, val, n))
 
-
-# Début brouillon
-# Fonction test qui regarde les premiers camions
-def useful_truckstest(file_truck):
-    """_summary_
-
-    Args:
-        file_truck (_type_): _description_
-
-    Returns:
-        dictionary: find the trucks that are useful among those of a file trucks.x.in
-        i.e. cost_i < cost_j si use_i < use_j
-    """
-    f = open(file_truck, "r") 
-    lignes = f.readlines()
-    n = lignes[0]
-    n = int(n)
-    d = dict()
-    d[1] = "Useful"
-    for i in range(2, 6):
-        last_truck = list(lignes[i-1].split())
-        truck = list(lignes[i].split())
-        last_cost = int(last_truck[1])
-        cost = int(truck[1])
-        d[i] = "Useful"
-        print(truck)
-        print("last_cost = ", last_cost)
-        print("cost = ", cost)
-        if last_cost > cost:
-            d[i-1] = "Useless"
-    return d
-
-def useful_trucks_listtest(file_truck):
-    """_summary_
-
-    Args:
-        file_truck (_type_): _description_
-
-    Returns:
-        dictionary: find the trucks that are useful among those of a file trucks.x.in
-        i.e. cost_i < cost_j si use_i < use_j
-    """
-    f = open(file_truck, "r") 
-    lignes = f.readlines()
-    n = lignes[0]
-    n = int(n)
-    goodtrucks = []
-    first_truck = list(lignes[1].split())
-    goodtrucks.append(first_truck)
-    for i in range(2, 6):
-        last_truck = list(lignes[i-1].split())
-        truck = list(lignes[i].split())
-        last_cost = int(last_truck[1])
-        cost = int(truck[1])
-        if last_cost > cost:
-            goodtrucks.pop()
-        goodtrucks.append(truck)
-    return goodtrucks
-# Fin brouillon
-
 def knapsack(nbr, truck):
     B = 25*(10^9)
     data_path = "input/"
@@ -768,53 +631,5 @@ def knapsack(nbr, truck):
 
     return None
 
-
-
-""" Old version
-
-    def dfs(self): #question 5 séance 2 
-        
-        depth=0
-        depths={}
-        parents={self.nodes[0]:[self.nodes[0],0]}
-        visited=[]
-        visited_1=[self.nodes[0]]
-
-        def explore(node,depth):
-            depths[node]=depth
-            visited.append(node)
-            for neighbor,power_min,dist in self.graph[node]:
-                if neighbor not in visited:
-                    explore(neighbor,depth+1)
-                    parents[neighbor]=[node,power_min]
-     
-            return depths
-              
-        depths=explore(self.nodes[0], 0)
-        
-  #      for nodes in self.nodes:
-   #         for neighbor,power_min,dist in self.graph[nodes]:
-    #            if neighbor not in visited_1 :
-     #               visited_1.append(neighbor)
-      #              parents[neighbor]=[nodes,power_min]
-        
-        self.depths = depths
-        self.parents = parents
-
-def route_x_out(filename,filename_1): #question 6 
-
-    g=graph_from_file(filename)
-    g_mst=kruskal(g)
-    f=open("input/route.x.out","a")
-    with open(filename_1, "r") as file:
-        #n = map(int, file.readline())
-        n = int(file.readline())
-        for j in range(n):
-            src,dest,profit=list(map(int, file.readline().split()))
-            g_mst.dfs()
-            power_min=g_mst.get_power_and_pathCMpro(src,dest)[0]
-            f.write(str(power_min))
-        f.close()
-"""
 
 

@@ -1,12 +1,15 @@
 from graph import Graph, graph_from_file, find, union, kruskal
-from graph import route_x_out, preprocessing_test, greedy_knapsack, before_knapsack
+from graph import route_x_out, preprocessing_test, greedy_knapsack, before_knapsack, etape_2
 
 
 # route_x_out("input/network.1.in", "input/routes.1.in")
 
-before_knapsack("input/network.1.in", "input/trucks.1.in", "input/routes.1.in")
-# greedy_knapsack("network.1.in", "trucks.1.in", "routes.1.in")
+# before_knapsack("input/network.1.in", "input/trucks.1.in", "input/routes.1.in")
+print(etape_2("input/network.1.in","input/routes.1.in", "input/trucks.1.in"))
 
+# print(greedy_knapsack("input/network.1.in","input/routes.1.in", "input/trucks.1.in"))
+# etape_2(filename,filename_1,filename_2)
+# print(len(greedy_knapsack("input/network.1.in","input/routes.1.in", "input/trucks.1.in")))
 
 """
 data_path = "input/"
