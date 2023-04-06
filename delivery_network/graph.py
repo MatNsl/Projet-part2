@@ -529,7 +529,7 @@ def greedy_knapsack(self, file_route, file_truck):
     Res = []
     super_list = etape_2(self, file_route, file_truck)
     n = len(super_list)
-    super_list = sorted(super_list, key=lambda item: item[2], reverse=True)
+    super_list = sorted(super_list, key=lambda item: item[2], reverse=True) # sorting of the list to look at the routes with the highest profit first
     totalcost = 0
     for j in range(n):
         i = super_list[j]
@@ -538,11 +538,11 @@ def greedy_knapsack(self, file_route, file_truck):
         if totalcost <= B:
             profit_route = i[2]
             right_truck = [[i[0]] + [i[1]]]
-            Res.append(right_truck + [profit_route])
+            Res.append(right_truck + [profit_route]) # we add the truck and the profit to the list of the chosen combinations
             j += 1
         else:
             totalcost -= cost
-            j = n-1
+            j = n-1 # If totalcost cannot be increased without exceeding the budget, we want to go out of the loop "for"
     return Res, totalcost
 
 def bruteforce_knapsack():
