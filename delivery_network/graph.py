@@ -525,7 +525,7 @@ def greedy_knapsack(self, file_route, file_truck):
     for each route in routes : the truck chosen and the profit
     and the cost of the approximative solution
     """
-    B = 100000 #25*(10**9)
+    B = 25*(10**9)
     Res = []
     super_list = etape_2(self, file_route, file_truck)
     n = len(super_list)
