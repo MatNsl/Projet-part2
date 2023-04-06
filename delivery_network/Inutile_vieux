@@ -1,3 +1,29 @@
+def greedy_knapsack(self, file_route, file_truck):
+    """
+    Approximative solution
+    We choose the most profitable routes 
+    until we cannot affect one single truck to a route
+    Should return a list with
+    for each route in routes : the truck chosen and the profit
+    and the cost of the approximative solution
+    """
+    B = 25*(10**9)
+    Res = []
+    super_list = etape_2(self, file_route, file_truck)
+    super_list = sorted(super_list, key=lambda item: item[2], reverse=True)
+    totalcost = 0
+    for i in super_list:
+        cost = i[1]
+        totalcost += cost
+        if totalcost <= B:
+            profit_route = i[2]
+            right_truck = [[i[0]] + [i[1]]]
+            Res.append(right_truck + [profit_route])
+        else:
+            totalcost -= cost
+    return Res, totalcost
+
+
 def graph_from_file(filename):
     """
     Reads a text file and returns the graph as an object of the Graph class.

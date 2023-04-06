@@ -525,20 +525,24 @@ def greedy_knapsack(self, file_route, file_truck):
     for each route in routes : the truck chosen and the profit
     and the cost of the approximative solution
     """
-    B = 25*(10**9)
+    B = 100000 #25*(10**9)
     Res = []
     super_list = etape_2(self, file_route, file_truck)
+    n = len(super_list)
+    super_list = sorted(super_list, key=lambda item: item[2], reverse=True)
     totalcost = 0
-
-    for i in super_list:
+    for j in range(n):
+        i = super_list[j]
         cost = i[1]
         totalcost += cost
         if totalcost <= B:
             profit_route = i[2]
             right_truck = [[i[0]] + [i[1]]]
             Res.append(right_truck + [profit_route])
+            j += 1
         else:
             totalcost -= cost
+            j = n-1
     return Res, totalcost
 
 def bruteforce_knapsack():
